@@ -33,6 +33,8 @@ var GameState = {
 		//draggable pet
 		this.pet.inputEnabled = true;
 		this.pet.input.enableDrag();
+
+		//creates sprites on canvas
 		this.strawberry = this.game.add.sprite(55, 570, 'strawberry');
 		this.strawberry.scale.setTo(1.2);
 		this.burger = this.game.add.sprite(130, 570, 'burger');
