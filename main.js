@@ -11,10 +11,11 @@ var GameState = {
 	//loads the game assets before game starts
 	preload: function() {
 		this.load.image('background', 'assets/imgs/background.png');
-		this.load.image('foods', 'assets/imgs/foods.png');
 		this.load.image('strawberry', 'assets/imgs/strawberry.png');
 		this.load.image('burger', 'assets/imgs/burger.png');
 		this.load.image('toy', 'assets/imgs/toy.png');
+		this.load.image('rotate', 'assets/imgs/rotate.png');
+
 
 
 		this.load.spritesheet('pet', 'assets/imgs/virtual-pet.png', 32, 32, 14);
@@ -29,9 +30,15 @@ var GameState = {
 		//custom parameters
 		this.pet.customParams = {health: 100, fun:100};
 
-		this.strawberry = this.game.add.sprite(72, 570, 'strawberry');
-		this.burger = this.game.add.sprite(134, 570, 'burger');
+		//draggable pet
+		this.pet.inputEnabled = true;
+		this.pet.input.enableDrag();
+		this.strawberry = this.game.add.sprite(55, 570, 'strawberry');
+		this.strawberry.scale.setTo(1.2);
+		this.burger = this.game.add.sprite(130, 570, 'burger');
 		this.toy = this.game.add.sprite(216, 570, 'toy');
+		this.rotate = this.game.add.sprite(288, 570, 'rotate');
+		this.rotate.scale.setTo(.6);
 
 	},
 };
