@@ -73,6 +73,17 @@ var GameState = {
 		this.selectedItem = null;
 		//checks if ui is blocked 
 		this.uiBlocked = false;
+
+		//styles ui text
+		var style = { font: '20px Roboto', fill: '#fff'};
+		this.game.add.text(30, 20, 'Health:', style);
+		this.game.add.text(190, 20, 'Happiness:', style);
+		//places text
+		this.healthText = this.game.add.text(105, 20, '', style);
+		this.happinessText = this.game.add.text(300, 20, '', style);
+		//method that updates stats
+		this.refreshStats();
+
 	},
 
 	//pick item method 
@@ -101,9 +112,11 @@ var GameState = {
 			sprite.alpha = 1;
 			//adds 10 fun points each rotation
 			this.pet.customParams.fun += 10;
-			console.log(this.pet.customParams.fun);
+		this.refreshStats();
+			// console.log(this.pet.customParams.fun);
 		}, this);
 		petRotation.start();
+		
 		}
 	},
 
@@ -147,12 +160,18 @@ var GameState = {
 					this.pet.customParams[stat] += newItem.customParams[stat];
 				}
 			}
+			//update visuals for stats
+			this.refreshStats();
 
 			}, this);
 
 			petMovement.start();
 		}
 
+	},
+	refreshStats: function() {
+		this.healthText.text = this.pet.customParams.health;
+		this.happinessText.text = this.pet.customParams.fun;
 	}
 };
 
