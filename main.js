@@ -15,7 +15,7 @@ var GameState = {
 		this.load.image('burger', 'assets/imgs/burger.png');
 		this.load.image('toy', 'assets/imgs/toy.png');
 		this.load.image('rotate', 'assets/imgs/rotate.png');
-		this.load.spritesheet('pet', 'assets/imgs/virtual-pet.png', 32, 32, 14);
+		this.load.spritesheet('pet', 'assets/imgs/virtual-pet.png', 32, 32, 15);
 	},
 	//executed last
 	create: function() {
@@ -33,7 +33,7 @@ var GameState = {
 
 
 		//custom parameters
-		this.pet.customParams = {health: 100, fun:100};
+		this.pet.customParams = {health: 100, happiness:100};
 
 		//draggable pet
 		this.pet.inputEnabled = true;
@@ -51,14 +51,14 @@ var GameState = {
 		this.burger.anchor.setTo(0.5);
 		this.burger.inputEnabled = true;
 		this.burger.events.onInputDown.add(this.pickItem, this);
-		this.burger.customParams = {health: -20, fun: 10};
+		this.burger.customParams = {health: -20, happiness: 10};
 
 
 		this.toy = this.game.add.sprite(216, 570, 'toy');
 		this.toy.anchor.setTo(0.5);
 		this.toy.inputEnabled = true;
 		this.toy.events.onInputDown.add(this.pickItem, this);
-		this.toy.customParams = {fun: 10};
+		this.toy.customParams = {happiness: 10};
 
 
 		this.rotate = this.game.add.sprite(288, 570, 'rotate');
@@ -83,6 +83,9 @@ var GameState = {
 		this.happinessText = this.game.add.text(300, 20, '', style);
 		//method that updates stats
 		this.refreshStats();
+
+		//decrease health every 5 seconds. Uses reduceProperties method
+		this.statsDecreaser = this.game.time.events.loop(Phaser.Timer.SECOND * 5, this.reduceProperties, this);
 
 	},
 
@@ -111,12 +114,11 @@ var GameState = {
 			this.uiBlocked = false;
 			sprite.alpha = 1;
 			//adds 10 fun points each rotation
-			this.pet.customParams.fun += 10;
+			this.pet.customParams.happiness += 10;
 		this.refreshStats();
-			// console.log(this.pet.customParams.fun);
 		}, this);
 		petRotation.start();
-		
+
 		}
 	},
 
@@ -171,7 +173,24 @@ var GameState = {
 	},
 	refreshStats: function() {
 		this.healthText.text = this.pet.customParams.health;
-		this.happinessText.text = this.pet.customParams.fun;
+		this.happinessText.text = this.pet.customParams.happiness;
+	},
+	reduceProperties: function() {
+		this.pet.customParams.health -= 10;
+		this.pet.customParams.happiness -= 15;
+		this.refreshStats();
+	},
+	//executed multiple times per second
+	update: function() {
+		if(this.pet.customParams.health <= 0 || this.pet.customParams.happiness <= 0) {
+			this.pet.frame = 14;
+			this.uiBlocked = true;
+			//game restarts after 3 seconds 
+			this.game.time.events.add(3000, this.gameOver, this);
+		}
+	},
+	gameOver: function() {
+		this.game.state.restart();
 	}
 };
 
