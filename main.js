@@ -20,6 +20,9 @@ var GameState = {
 	//executed last
 	create: function() {
 		this.background = this.game.add.sprite(0, 0, 'background');
+		this.background.inputEnabled = true;
+		this.background.events.onInputDown.add(this.placeItem, this);
+
 
 		this.pet = this.game.add.sprite(175, 300, 'pet');
 		this.pet.anchor.setTo(0.5);
@@ -86,7 +89,7 @@ var GameState = {
 
 		this.clearSelection();
 		sprite.alpha = 0.5;
-// tween animation rotates pet 
+		// tween animation rotates pet 
 		var petRotation = this.game.add.tween(this.pet);
 		petRotation.to({angle: '+720'}, 1000);
 		petRotation.onComplete.add(function(){
@@ -106,6 +109,19 @@ var GameState = {
 			element.alpha = 1;
 		});
 		this.selectedItem = null;
+	},
+
+	placeItem: function(sprite, event) {
+		//if nothing has been selected and ui is blocked you can't place things on the screen
+		if(this.selectedItem && !this.uiBlocked) {
+			var x = event.position.x;
+			var y = event.position.y;
+
+			var newItem = this.game.add.sprite(x, y, this.selectedItem.key);
+			newItem.anchor.setTo(0.5);
+			newItem.customParams = this.selectedItem.customParams;
+		}
+
 	}
 };
 
