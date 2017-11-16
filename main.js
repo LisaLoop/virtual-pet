@@ -23,10 +23,14 @@ var GameState = {
 		this.background.inputEnabled = true;
 		this.background.events.onInputDown.add(this.placeItem, this);
 
-
+		//creates the pet
 		this.pet = this.game.add.sprite(175, 300, 'pet');
 		this.pet.anchor.setTo(0.5);
-		this.pet.scale.setTo(3.5);
+		this.pet.scale.setTo(3);
+
+		//spritesheet animation plays when item is consumed
+		this.pet.animations.add('eatingFace', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 4, 3, 2, 1, 0], 50, false);
+
 
 		//custom parameters
 		this.pet.customParams = {health: 100, fun:100};
@@ -123,15 +127,21 @@ var GameState = {
 			newItem.customParams = this.selectedItem.customParams;
 
 			this.uiBlocked = true;
+			//adds tween animation: pet moves toward item
 			var petMovement = this.game.add.tween(this.pet);
 			petMovement.to({x: x, y: y}, 700);
 			petMovement.onComplete.add(function(){
+			//destroys item when tween animation is complete
 			newItem.destroy();
+			//play animation 
+			this.pet.animations.play('eatingFace');
+			//release the ui
 			this.uiBlocked = false;
 
 			var stat;
+			//stat takes the value of custom params only!
 			for(stat in newItem.customParams) {
-				//only uses custom params, not other prototype props 
+				//not other, non-desirable, object prototype properties
 				if(newItem.customParams.hasOwnProperty(stat)) {
 					console.log(stat);
 					this.pet.customParams[stat] += newItem.customParams[stat];
