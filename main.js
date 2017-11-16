@@ -95,6 +95,7 @@ var GameState = {
 		petRotation.onComplete.add(function(){
 			this.uiBlocked = false;
 			sprite.alpha = 1;
+			//adds 10 fun points each rotation
 			this.pet.customParams.fun += 10;
 			console.log(this.pet.customParams.fun);
 		}, this);
@@ -125,7 +126,17 @@ var GameState = {
 			var petMovement = this.game.add.tween(this.pet);
 			petMovement.to({x: x, y: y}, 700);
 			petMovement.onComplete.add(function(){
+			newItem.destroy();
 			this.uiBlocked = false;
+
+			var stat;
+			for(stat in newItem.customParams) {
+				//only uses custom params, not other prototype props 
+				if(newItem.customParams.hasOwnProperty(stat)) {
+					console.log(stat);
+					this.pet.customParams[stat] += newItem.customParams[stat];
+				}
+			}
 
 			}, this);
 
